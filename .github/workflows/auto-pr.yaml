@@ -3,25 +3,33 @@ name: Auto Create Pull Request
 on:
   push:
     branches:
-      - master  # Trigger workflow when there are pushes to the master branch
+      - master  # Trigger workflow on pushes to the master branch
 
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Configure Git user (required for commits or Git operations)
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Create the Pull Request
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          source: master          # The source branch for the pull request
-          target: main            # The target branch for the pull request
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Use PAT instead of GITHUB_TOKEN
+          source: master                              # Source branch for the pull request
+          target: main                                # Target branch for the pull request
           title: "Automated Pull Request: master -> main"
           body: |
-            This pull request was created automatically by GitHub Actions.
+            This pull request was created automatically using a personal access token.
             Please review and merge if appropriate.
           labels: |
             automated
