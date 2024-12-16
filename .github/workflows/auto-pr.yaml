@@ -1,22 +1,25 @@
----
 name: Auto Create Pull Request
+
 on:
   push:
     branches:
-      - master
+      - master  # Trigger workflow when there are pushes to the master branch
+
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
-          base: main
-          title: Automated Pull Request from master to Main to review pr
+          source: master          # The source branch for the pull request
+          target: main            # The target branch for the pull request
+          title: "Automated Pull Request: master -> main"
           body: |
             This pull request was created automatically by GitHub Actions.
             Please review and merge if appropriate.
